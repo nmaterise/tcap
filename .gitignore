@@ -1,0 +1,18 @@
+# COMSOL files
+*.lock
+*.mph
+
+# vim files
+*.swp
+*.swo
+tags
+
+# data files
+*.csv
+*.txt
+
+# Figure files
+*.pdf
+*.jpg
+*.png
+*.svg
