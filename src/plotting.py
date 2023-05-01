@@ -10,6 +10,10 @@ import matplotlib as mpl
 from matplotlib import cm
 from matplotlib.colors import BoundaryNorm
 from matplotlib.ticker import MaxNLocator
+from scipy.interpolate import griddata
+
+# Color blind friendly color scheme
+plt.style.use('tableau-colorblind10')
 
 class MPLPlotWrapper(object):
     """
@@ -158,6 +162,12 @@ class MPLPlotWrapper(object):
             if yscales is not None:
                 self.ax.set_yscale(yscales)
                 self._yscale = yscales
+
+    def close(self, op='all'):
+        """
+        Closes figures
+        """
+        plt.close(op)
 
     def init_subplots(self):
         """
@@ -376,7 +386,12 @@ class MPLPlotWrapper(object):
         """
         Plots a 2D heat map given data as x, y, z[2D]
         """
-        if plot_option == 'pcolormesh':
+        # Get the dimensions and colormap
+        NM = get_largest_factors(z.size)
+        cmap = mpl.cm.get_cmap(cmap_str)
+
+        # Plot with tricontourf interpolation
+        if plot_option == 'tricontourf':
             # Normalize the data
             if norm_type == 'linear':
                 norm = mpl.colors.Normalize(z.min(), z.max())
@@ -385,70 +400,49 @@ class MPLPlotWrapper(object):
             else:
                 raise ValueError(f'norm_type ({norm_type}) not supported.')
 
+            # Overwrite the norm with an external reference
+            if zlim is not None:
+                norm = mpl.colors.Normalize(min(zlim), max(zlim))
+
             # Call the p-color mesh and set the labels
-            NM = get_largest_factors(z.size)
-            z = z.reshape([max(NM), min(NM)])
-            x = np.linspace(x.min(), x.max(), max(NM))
-            y = np.linspace(y.min(), y.max(), min(NM))
-            plt1 = self.ax.pcolormesh(x, y, z, norm=norm)
-            self.ax.set_xlabel(xstr, fontsize=self.fsize)
-            self.ax.set_ylabel(ystr, fontsize=self.fsize)
+            plt1 = self.ax.tricontourf(x, y, z, norm=norm, cmap=cmap,
+                    levels=50) # , extend='both')
+            # This is the fix for the white lines between contour levels
+            for c in plt1.collections:
+                c.set_edgecolor('face')
 
-            # Set the scales of the x- and y-axes
-            self.ax.set_xscale(xyscales['x'])
-            self.ax.set_yscale(xyscales['y'])
-
-            # Set the colorbar
-            cbar = self.fig.colorbar(plt1, ax=self.ax)
-            cbar.ax.set_title(cbar_str, fontsize=self.fsize, y=1.025)
-            cbar.ax.tick_params(labelsize=self.fsize)
+            # plt1 = self.ax.scatter(x, y, c=z, cmap=cmap)
 
         elif plot_option == 'imshow':
             # Scatter plot with z-values as intensities
-            cmap = mpl.cm.get_cmap(cmap_str)
-            NM = get_largest_factors(z.size)
             z = z.reshape([max(NM), min(NM)])
             plt1 = self.ax.imshow(z,
                     extent=[x.min(), x.max(), y.min(), y.max()], cmap=cmap,
                     aspect='auto')
 
-            # set the labels
-            self.ax.set_xlabel(xstr, fontsize=self.fsize)
-            self.ax.set_ylabel(ystr, fontsize=self.fsize)
-
-            # Set the scales of the x- and y-axes
-            self.ax.set_xscale(xyscales['x'])
-            self.ax.set_yscale(xyscales['y'])
-
-            # Rotate the axis labels
-            self.set_xaxis_rot(angle=45.)
-
         elif plot_option == 'scatter':
             # Scatter plot with z-values as intensities
-            cmap = mpl.cm.get_cmap(cmap_str)
             plt1 = self.ax.scatter(x, y, c=z, cmap=cmap)
-
-            # set the labels
-            self.ax.set_xlabel(xstr, fontsize=self.fsize)
-            self.ax.set_ylabel(ystr, fontsize=self.fsize)
-
-            # Set the scales of the x- and y-axes
-            self.ax.set_xscale(xyscales['x'])
-            self.ax.set_yscale(xyscales['y'])
-
-            # Rotate the axis labels
-            self.set_xaxis_rot(angle=45.)
 
         else:
             raise ValueError(f'plot_option ({plot_option}) not recognized.')
+
+        # Axes labels
+        self.ax.set_xlabel(xstr, fontsize=self.fsize)
+        self.ax.set_ylabel(ystr, fontsize=self.fsize)
+
+        # Set the scales of the x- and y-axes
+        self.ax.set_xscale(xyscales['x'])
+        self.ax.set_yscale(xyscales['y'])
+
+        # Rotate the axis labels
+        self.set_xaxis_rot(angle=45.)
 
         # Set the colorbar
         cbar = self.fig.colorbar(plt1, ax=self.ax)
         cbar.ax.set_title(cbar_str, fontsize=self.fsize, y=1.025)
         cbar.ax.tick_params(labelsize=self.fsize)
-
-        if zlim:
-            plt1.set_clim(zlim)
+        # cbar.set_ticks(np.arange(min(zlim), max(zlim), 5))
 
         # Write the figure to file
         self.write_fig_to_file(fname)

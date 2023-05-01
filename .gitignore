@@ -12,7 +12,8 @@ tags
 *.txt
 
 # Figure files
-*.pdf
+*.pdf*
+*.ps
 *.jpg
 *.png
 *.svg
