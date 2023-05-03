@@ -266,44 +266,59 @@ class MPLPlotWrapper(object):
         else:
             raise KeyError(f'axis ({axis}) invalid.')
     
-    def set_axes_fonts(self):
+    def set_axes_fonts(self, ax=None):
         """
         Set axes font sizes because it should be abstracted away
         """
-        if self.xdim > 1 or self.ydim > 1:
-            for i in range(self.xdim):
-                for j in range(self.ydim):
-                    for tick in self.ax[i, j].get_xticklabels():
-                        tick.set_fontsize(self.fsize)
-                    for tick in self.ax[i, j].get_yticklabels():
-                        tick.set_fontsize(self.fsize)
+        if ax is not None:
+            for tick in ax.get_xticklabels():
+                tick.set_fontsize(self.fsize)
+            for tick in ax.get_yticklabels():
+                tick.set_fontsize(self.fsize)
         else:
-            for tick in self.ax.get_xticklabels():
-                tick.set_fontsize(self.fsize)
-            for tick in self.ax.get_yticklabels():
-                tick.set_fontsize(self.fsize)
+            if self.xdim > 1 or self.ydim > 1:
+                for i in range(self.xdim):
+                    for j in range(self.ydim):
+                        for tick in self.ax[i, j].get_xticklabels():
+                            tick.set_fontsize(self.fsize)
+                        for tick in self.ax[i, j].get_yticklabels():
+                            tick.set_fontsize(self.fsize)
+            else:
+                for tick in self.ax.get_xticklabels():
+                    tick.set_fontsize(self.fsize)
+                for tick in self.ax.get_yticklabels():
+                    tick.set_fontsize(self.fsize)
     
-    def set_axes_ticks(self, tk, axis='x'):
+    def set_axes_ticks(self, tk, ax=None, axis='x'):
         """
         Set the values displayed on the ticks
         """
         # Set the x ticks, otherwise, y ticks
-        if self.xdim > 1 or self.ydim > 1:
-            for i in range(self.xdim):
-                for j in range(self.ydim):
-                    if axis == 'x':
-                        self.ax[i, j].set_xticklabels(tk)
-                    elif axis == 'y':
-                        self.ax[i, j].set_yticklabels(tk)
-                    else:
-                        raise ValueError('(%s) axis is invalid.')
-        else:
+        if ax is not None:
             if axis == 'x':
-                self.ax.set_xticklabels(tk)
+                ax.set_xticklabels(tk)
             elif axis == 'y':
-                self.ax.set_yticklabels(tk)
+                ax.set_yticklabels(tk)
             else:
                 raise ValueError('(%s) axis is invalid.')
+        else:
+
+            if self.xdim > 1 or self.ydim > 1:
+                for i in range(self.xdim):
+                    for j in range(self.ydim):
+                        if axis == 'x':
+                            self.ax[i, j].set_xticklabels(tk)
+                        elif axis == 'y':
+                            self.ax[i, j].set_yticklabels(tk)
+                        else:
+                            raise ValueError('(%s) axis is invalid.')
+            else:
+                if axis == 'x':
+                    self.ax.set_xticklabels(tk)
+                elif axis == 'y':
+                    self.ax.set_yticklabels(tk)
+                else:
+                    raise ValueError('(%s) axis is invalid.')
     
     def set_xaxis_rot(self, angle=45):
         """

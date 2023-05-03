@@ -13,7 +13,7 @@ def test_load_admittance_data():
     implementing terminal-wise averaging
     """
     # Instantiate the class and read the data from file
-    myy = am.Admittance(symmetrize=True)
+    myy = am.Admittance(symmetrize=False)
     filename = './data/ymatrix_50K_vgall.txt'
     myy.load_all_data_from_file(filename)
     Y = myy.data
@@ -25,13 +25,29 @@ def test_plot_admittance_data():
     Tests the plotting of the Y data vs. Vg
     """
     # Instantiate the class and read the data from file
-    myy = am.Admittance()
+    myy = am.Admittance(symmetrize=False)
     filename = './data/ymatrix_50K_vgall.txt'
     myy.load_all_data_from_file(filename)
-    for i in range(myy.Nterm):
-        for j in range(i, myy.Nterm):
-            fname = f'./figs/ymatrix_c{i+1}{j+1}_vs_vg.pdf'
-            myy.plot_cij_vs_vg(i, j, fname)
+    Vg = -4.5
+    Vgstr = f'{Vg}'.replace('.', 'p')
+    for i in range(myy.Nt):
+        for j in range(myy.Nt):
+            fname = f'./figs/ymatrix_y{i+1}{j+1}_vg_{Vgstr}V.pdf'
+            myy.plot_yij_vs_f_at_vg(i, j, Vg, fname)
+
+def test_plot_admittance_data_vs_vg():
+    """
+    Tests the plotting of the Y data vs. Vg
+    """
+    # Instantiate the class and read the data from file
+    myy = am.Admittance(symmetrize=False)
+    filename = './data/ymatrix_50K_vgall.txt'
+    myy.load_all_data_from_file(filename)
+    real_imag = 'imag'
+    for i in range(myy.Nt):
+        for j in range(myy.Nt):
+            fname = f'./figs/ymatrix_y{real_imag[0:2]}{i+1}{j+1}_vgall.pdf'
+            myy.plot_yij_vs_f_vs_vg(i, j, fname, real_imag=real_imag)
 
 def test_plot_all_admittance_data():
     """
@@ -46,6 +62,7 @@ def test_plot_all_admittance_data():
 
 if __name__ == '__main__':
     # Call the function above to test the source code
-    test_load_admittance_data()
+    # test_load_admittance_data()
     # test_plot_admittance_data()
-    # test_plot_all_admittance_data()
+    # test_plot_admittance_data()
+    test_plot_admittance_data_vs_vg()

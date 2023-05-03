@@ -36,20 +36,33 @@ class MaxwellCapacitance(object):
         """
         # Read the data and order into Vg-labeled dictionary
         data = np.genfromtxt(fname, skip_header=skip_header).T
-        Vg = data[0]
-        Vg_uniq = np.unique(Vg)
-        self.Nterm = Vg.size // Vg_uniq.size
-        C = data[5:] / self.scale
+        Vg        = data[0]
+        Vg_uniq   = np.unique(Vg)
+        self.Nt   = Vg.size // Vg_uniq.size
+        Nvg       = Vg_uniq.size
+        C         = data[5:] / self.scale
         self.data = {}
+        C         = np.reshape(C, [self.Nt * self.Nt, Nvg, self.Nt])
         for vidx, vg in enumerate(Vg_uniq):
             C_key = f'cmatrix_vg_{vg}'.replace('.', 'p')
             Cavg = 0
-            for i in range(self.Nterm):
-                Cavg +=  C[:, vidx*self.Nterm + i]
-            Cin = Cavg.reshape([self.Nterm, self.Nterm]) # / self.Nterm
+            for i in range(self.Nt):
+                # Cavg +=  C[:, vidx * self.Nt + i]
+                Cavg +=  C[:, vidx, i]
+            Cin = Cavg.reshape([self.Nt, self.Nt]) # / self.Nt
             if self.symmetrize:
                 Cin = 0.5 * (Cin + Cin.T)
             self.data[C_key] = [vg, Cin]
+
+        # for vidx, vg in enumerate(Vg_uniq):
+        #     C_key = f'cmatrix_vg_{vg}'.replace('.', 'p')
+        #     Cavg = 0
+        #     for i in range(self.Nt):
+        #         Cavg +=  C[:, vidx * self.Nt + i]
+        #     Cin = Cavg.reshape([self.Nt, self.Nt]) # / self.Nt
+        #     if self.symmetrize:
+        #         Cin = 0.5 * (Cin + Cin.T)
+        #     self.data[C_key] = [vg, Cin]
 
         self.all_data_loaded = True
 
@@ -84,8 +97,9 @@ class MaxwellCapacitance(object):
         idx = 0
         mrks = myplt.marker_cycle
         mlen = len(mrks)
-        for i in range(self.Nterm):
-            for j in range(i, self.Nterm):
+        for i in range(self.Nt):
+            # for j in range(i, self.Nt):
+            for j in range(self.Nt):
                 print(f'C[{i}, {j}]')
                 myplt.plot(Vg, np.abs(Cij[:, i, j]),
                            marker=mrks[idx % mlen], ls='-',

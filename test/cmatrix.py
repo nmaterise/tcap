@@ -38,7 +38,7 @@ def test_plot_all_capacitance_data():
     Tests the plotting of the C data vs. Vg
     """
     # Instantiate the class and read the data from file
-    myc = cm.MaxwellCapacitance(symmetrize=True)
+    myc = cm.MaxwellCapacitance(symmetrize=False)
     filename = './data/cmatrix_50K_vgall.txt'
     myc.load_all_data_from_file(filename)
     fname = './figs/cmatrix_c_all_vs_vg.pdf'
@@ -46,6 +46,6 @@ def test_plot_all_capacitance_data():
 
 if __name__ == '__main__':
     # Call the function above to test the source code
-    test_load_capacitance_data()
+    # test_load_capacitance_data()
     # test_plot_capacitance_data()
     test_plot_all_capacitance_data()
