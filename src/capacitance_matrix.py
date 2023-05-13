@@ -37,7 +37,7 @@ class MaxwellCapacitance(object):
         # Read the data and order into Vg-labeled dictionary
         data = np.genfromtxt(fname, skip_header=skip_header).T
         Vg        = data[0]
-        Vg_uniq   = np.unique(Vg)
+        Vg_uniq   = np.unique(Vg)[::-1]
         self.Nt   = Vg.size // Vg_uniq.size
         Nvg       = Vg_uniq.size
         C         = data[5:] / self.scale
@@ -53,16 +53,6 @@ class MaxwellCapacitance(object):
             if self.symmetrize:
                 Cin = 0.5 * (Cin + Cin.T)
             self.data[C_key] = [vg, Cin]
-
-        # for vidx, vg in enumerate(Vg_uniq):
-        #     C_key = f'cmatrix_vg_{vg}'.replace('.', 'p')
-        #     Cavg = 0
-        #     for i in range(self.Nt):
-        #         Cavg +=  C[:, vidx * self.Nt + i]
-        #     Cin = Cavg.reshape([self.Nt, self.Nt]) # / self.Nt
-        #     if self.symmetrize:
-        #         Cin = 0.5 * (Cin + Cin.T)
-        #     self.data[C_key] = [vg, Cin]
 
         self.all_data_loaded = True
 
@@ -84,7 +74,7 @@ class MaxwellCapacitance(object):
         # Write the figure to file
         myplt.write_fig_to_file(fname)
 
-    def plot_c_all_vs_vg(self, fname):
+    def plot_c_all_vs_vg(self, fname, ylim=None, xrot=None):
         """
         Plot the full capacitance matrix as a function of gate voltage
         """
@@ -101,13 +91,17 @@ class MaxwellCapacitance(object):
             # for j in range(i, self.Nt):
             for j in range(self.Nt):
                 print(f'C[{i}, {j}]')
-                myplt.plot(Vg, np.abs(Cij[:, i, j]),
+                myplt.plot(Vg, Cij[:, i, j],
                            marker=mrks[idx % mlen], ls='-',
                     label=r'$C_{%d%d}$' % (i + 1, j + 1))
                 idx += 1
 
         myplt.xlabel = r'$V_g$ [V]'
-        myplt.ylabel = r'$|C_{ij}|$ [fF]'
+        myplt.ylabel = r'$C_{ij}$ [fF]'
+        if xrot is not None:
+            myplt.set_xaxis_rot(xrot)
+        if ylim is not None:
+            myplt.ylim = ylim
         myplt.set_leg_outside()
 
         # Write the figure to file

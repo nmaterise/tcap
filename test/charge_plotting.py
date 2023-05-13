@@ -65,5 +65,5 @@ if __name__ == '__main__':
     # Call the function above to test the source code
     # test_plot_charges()
     # test_plot_charges_binary()
-    # test_plot_all_charges()
-    test_plot_all_charges_binary()
+    test_plot_all_charges()
+    # test_plot_all_charges_binary()

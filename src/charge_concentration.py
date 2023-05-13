@@ -53,7 +53,7 @@ class ChargeConcentration(object):
             sdata = fid.read()
             ssplit = sdata.split('\n')
             columns = ssplit[8]
-            recmp = regex.compile('Vg1=(.*)')
+            recmp = regex.compile('Vdc=(.*)')
             Vgs = np.float64(recmp.findall(columns.replace(',', '\n')))
 
         # Read the data and order into Vg-labeled dictionary
@@ -61,7 +61,9 @@ class ChargeConcentration(object):
         x = data[0]
         y = data[1]
         z = data[2:] + self.scale
+        print(f'z[0].shape: {z[0].shape}')
         self.data = {}
+        print(f'Vgs: {Vgs}')
         for vidx, vg in enumerate(Vgs):
             vg_key = f'ng_vg_{vg}_charge'.replace('.', 'p')
             self.data[vg_key] = [x, y, z[vidx]]
@@ -72,7 +74,7 @@ class ChargeConcentration(object):
                             xyunits={'x' : r'[$\mu$m]', 'y' : '[nm]',
                                 'xv' : 1e-6, 'yv' : 1e-9},
                             binary_threshold=None, plot_option='scatter',
-                            xlim=None):
+                            xlim=None, ylim=None):
         """
         Plots all concentration data using the labels as filenames
         """
@@ -135,6 +137,13 @@ class ChargeConcentration(object):
                     x = x[xidx]
                     y = y[xidx]
                     z = z[xidx]
+                if ylim:
+                    myplt.ylim = ylim
+                    yidx = np.where(
+                            np.logical_and(y >= ylim[0], y <= ylim[1]))[0]
+                    x = x[yidx]
+                    y = y[yidx]
+                    z = z[yidx]
 
                 myplt.plot_2d_cmap(x, y, z, norm_type='linear',
                         fname=f'./{fig_dir}{key}_concentration.pdf',
