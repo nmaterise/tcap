@@ -42,8 +42,8 @@ def test_plot_all_capacitance_data():
     filename = './data/cmatrix_50K_vgall.txt'
     myc.load_all_data_from_file(filename)
     fname = './figs/cmatrix_c_all_vs_vg.pdf'
-    myc.plot_c_all_vs_vg(fname, ylim=[-125, 100], xrot=45)
-    # myc.plot_c_all_vs_vg(fname, xrot=45)
+    # myc.plot_c_all_vs_vg(fname, ylim=[-160, None], xrot=45)
+    myc.plot_c_all_vs_vg(fname, xrot=45)
 
 if __name__ == '__main__':
     # Call the function above to test the source code

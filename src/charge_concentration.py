@@ -17,8 +17,8 @@ class ChargeConcentration(object):
 
         # Default class conditions
         self.all_data_loaded = False
-        self.units = r'log$_{10}$ n [cm$^{-3}]$'
-        self.scale = -6
+        self.units = r'log$_{10}$ n[cm$^{-3}]$'
+        self.scale = 6
 
         # Update the arguments and keyword arguments
         self.__dict__.update(locals())
@@ -83,6 +83,13 @@ class ChargeConcentration(object):
             # Iterate over all entries in the data
             idx = 0
             for key, val in self.data.items():
+                # Annonate with the key label
+                ksplit = key.split('_')
+                t1 = ksplit[1].capitalize()
+                tt = r'$%s_{%s}$' % (t1[0], t1[1])
+                t2 = ksplit[2].replace('p', '.')
+                tstr = f'{tt} = {t2} V'
+
                 # Instantiate the plotting class object
                 myplt = plt.MPLPlotWrapper()
                 x, y, z = val[0], val[1], val[2]
@@ -110,12 +117,19 @@ class ChargeConcentration(object):
                         fname=f'./{fig_dir}{key}_thresholded_concentration.pdf',
                         cmap_str='binary', xstr=r'$x$ %s' % xyunits['x'],
                         ystr=r'$y$ %s' % xyunits['y'], plot_option=plot_option,
-                        zlim=(0, 1))
+                        zlim=(0, 1), tstr=tstr)
                 idx += 1
 
         else:
             idx = 0
             for key, val in self.data.items():
+                # Annonate with the key label
+                ksplit = key.split('_')
+                t1 = ksplit[1].capitalize()
+                tt = r'$%s_{%s}$' % (t1[0], t1[1])
+                t2 = ksplit[2].replace('p', '.')
+                tstr = f'{tt} = {t2} V'
+
                 # Instantiate the plotting class object
                 myplt = plt.MPLPlotWrapper()
                 x, y, z = val[0], val[1], val[2]
@@ -147,9 +161,10 @@ class ChargeConcentration(object):
 
                 myplt.plot_2d_cmap(x, y, z, norm_type='linear',
                         fname=f'./{fig_dir}{key}_concentration.pdf',
-                        cmap_str='cividis', xstr=r'$x$ %s' % xyunits['x'],
+                        # cmap_str='cividis', xstr=r'$x$ %s' % xyunits['x'],
+                        cmap_str='viridis', xstr=r'$x$ %s' % xyunits['x'],
                         ystr=r'$y$ %s' % xyunits['y'], plot_option=plot_option,
-                        zlim=(-30, 12), cbar_str=self.units)
+                        zlim=(-30, 24), cbar_str=self.units, tstr=tstr)
 
                 myplt.close('all')
                 idx += 1

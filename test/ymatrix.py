@@ -106,10 +106,11 @@ def test_plot_all_admittance_data_iv():
     vfname = './data/vvector_50K_vgall.txt'
     myy.load_all_data_from_iv_files(ifname, vfname)
 
-    # fname = './figs/ymatrix_iv_c_all_vs_vg.pdf'
-    # myy.plot_c_all_vs_vg(fname, ylim=[-125, 100], xrot=45.)
+    fname = './figs/ymatrix_iv_c_all_vs_vg.pdf'
+    myy.cscale = 1e-15
+    myy.plot_c_all_vs_vg(fname, xrot=45.)
     fname = './figs/ymatrix_iv_g_all_vs_vg.pdf'
-    myy.gscale = 1e-6
+    myy.gscale = 1e-15
     myy.plot_g_all_vs_vg(fname, xrot=45)
 
 def test_plot_admittance_data_vs_vg_iv():

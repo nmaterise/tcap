@@ -287,7 +287,8 @@ class Admittance(object):
         """
         # Initialize the figure and axes
         scale_dict = {'G' : 1e9, 'M' : 1e6, 'k' : 1e3, '' : 1.,
-                'm' : 1e-3, r'$\mu$' : 1e-6}
+                'm' : 1e-3, r'$\mu$' : 1e-6, 'n' : 1e-9, 'p' : 1e-12,
+                'f' : 1e-15, 'a' : 1e-18}
         scale_str = \
         list(scale_dict.keys())[list(scale_dict.values()).index(self.gscale)]
         myplt = plt.MPLPlotWrapper()

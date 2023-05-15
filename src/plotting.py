@@ -395,7 +395,7 @@ class MPLPlotWrapper(object):
         self.is_leg_outside = True
 
     def plot_2d_cmap(self, x, y, z, fname, xstr='', ystr='', zstr='',
-            cbar_str='', cmap_str=cm.inferno, norm_type='linear',
+            tstr='', cbar_str='', cmap_str=cm.inferno, norm_type='linear',
             xyscales = {'x' : 'linear', 'y' : 'linear'},
             plot_option='imshow', zlim=None):
         """
@@ -421,7 +421,7 @@ class MPLPlotWrapper(object):
 
             # Call the p-color mesh and set the labels
             plt1 = self.ax.tricontourf(x, y, z, norm=norm, cmap=cmap,
-                    levels=50) # , extend='both')
+                    levels=50, extend='both')
             # This is the fix for the white lines between contour levels
             for c in plt1.collections:
                 c.set_edgecolor('face')
@@ -445,6 +445,7 @@ class MPLPlotWrapper(object):
         # Axes labels
         self.ax.set_xlabel(xstr, fontsize=self.fsize)
         self.ax.set_ylabel(ystr, fontsize=self.fsize)
+        self.ax.set_title(tstr, fontsize=self.fsize)
 
         # Set the scales of the x- and y-axes
         self.ax.set_xscale(xyscales['x'])
@@ -454,8 +455,8 @@ class MPLPlotWrapper(object):
         self.set_xaxis_rot(angle=45.)
 
         # Set the colorbar
-        cbar = self.fig.colorbar(plt1, ax=self.ax)
-        cbar.ax.set_title(cbar_str, fontsize=self.fsize, y=1.025)
+        cbar = self.fig.colorbar(plt1, ax=self.ax, format='%.0f')
+        cbar.ax.set_title(cbar_str, fontsize=self.fsize, y=1.05)
         cbar.ax.tick_params(labelsize=self.fsize)
         # cbar.set_ticks(np.arange(min(zlim), max(zlim), 5))
 
