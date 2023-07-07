@@ -1,6 +1,8 @@
 # COMSOL files
 *.lock
 *.mph
+!single_small_gate_2deg_inalas_semi_ec.mph
+!single_top_gate_2deg.mph
 
 # vim files
 *.swp
@@ -10,6 +12,10 @@ tags
 # data files
 *.csv
 *.txt
+!requirements.txt
+!ymatrix_50K_vgall.txt
+!surface_density_50K_vgall_230618.txt
+
 
 # Figure files
 *.pdf*
@@ -18,3 +24,8 @@ tags
 *.png
 *.svg
 *.eps
+
+# Latex files
+*.tex
+*.bib
+paper/*

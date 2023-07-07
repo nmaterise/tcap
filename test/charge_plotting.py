@@ -42,6 +42,7 @@ def test_plot_all_charges():
     """
     dpath = './data'
     fname = f'{dpath}/surface_density_50K_vgall.txt'
+    fname = f'{dpath}/surface_density_50K_vgall_230618.txt'
 
     # Call the charge concentration class
     mycc = cc.ChargeConcentration()

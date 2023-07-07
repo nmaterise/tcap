@@ -421,7 +421,7 @@ class MPLPlotWrapper(object):
 
             # Call the p-color mesh and set the labels
             plt1 = self.ax.tricontourf(x, y, z, norm=norm, cmap=cmap,
-                    levels=50, extend='both')
+                    levels=100, extend='both')
             # This is the fix for the white lines between contour levels
             for c in plt1.collections:
                 c.set_edgecolor('face')
@@ -456,7 +456,7 @@ class MPLPlotWrapper(object):
 
         # Set the colorbar
         cbar = self.fig.colorbar(plt1, ax=self.ax, format='%.0f')
-        cbar.ax.set_title(cbar_str, fontsize=self.fsize, y=1.05)
+        cbar.ax.set_title(cbar_str, fontsize=self.fsize, x=-0.1, y=1.05)
         cbar.ax.tick_params(labelsize=self.fsize)
         # cbar.set_ticks(np.arange(min(zlim), max(zlim), 5))
 

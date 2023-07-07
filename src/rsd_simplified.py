@@ -79,8 +79,11 @@ def plot_rmatrix(fname, Nterm=3, C0=1e-15, onoff='off',
                             2*np.pi*freqs)))
             G[i, j] = np.mean(y[:, i, j].real)
 
+    R = np.linalg.inv(G)
+
     print(f'C:\n{C/C0} fF')
     print(f'G:\n{G} S')
+    print(f'R:\n{R} Ohms')
 
     # Compute the parasitic capacitance matrix
     C11 = C1 + C[0, 0] + abs(C[0, 1]) + abs(C[0, 2])
@@ -109,6 +112,7 @@ def plot_rmatrix(fname, Nterm=3, C0=1e-15, onoff='off',
     print(f'Cfull:\n{Cfull/C0} fF')
     print(f'Cs:\n{Cs/C0} fF')
     print(f'Cfullinv:\n{CfullinvMHz} MHz')
+    print(f'Csinv:\n{CsinvMHz} MHz')
 
     # Plot the capacitance and conductance matrices
     x = np.linspace(1, Nterm, Nterm)
@@ -126,7 +130,7 @@ def plot_rmatrix(fname, Nterm=3, C0=1e-15, onoff='off',
 
     cmap = cm.viridis
     ppt.plot_2d_cmap(x, y, C/C0, fname_out_cbar,
-                     cbar_str=r'$C_{%s}$ [fF]' % onoff,
+                     cbar_str=r'$C_{\mathrm{%s}}$ [fF]' % onoff,
                      use_imshow=True, show_cbar=True, cmap=cmap,
                      # zlims=[1e-2, 1.5e2], nlevels=300)
                      zlims=None, nlevels=300)
@@ -152,9 +156,14 @@ def plot_rmatrix(fname, Nterm=3, C0=1e-15, onoff='off',
 if __name__ == '__main__':
 
     # Plot the admittance data, just to inspect it
-    fname = 'ymatrix_split_gnd_plane_one_gate_conducting_220525.txt'
-    fname = 'ymatrix_split_gnd_plane_one_small_gate_conducting_220527.txt'
-    plot_rmatrix(fname, Nterm=3, onoff='on')
-    fname = 'ymatrix_split_gnd_plane_one_small_gate_depleted_220527.txt'
-    plot_rmatrix(fname, Nterm=3, onoff='off')
+    fname = './data/ymatrix_split_gnd_plane_one_gate_conducting_220525.txt'
+    fname = './data/ymatrix_split_gnd_plane_one_small_gate_conducting_220527.txt'
+    fname = './data/ymatrix_50K_depleted_230617.txt'
+    plot_rmatrix(fname, Nterm=3, onoff='depleted')
+    fname = './data/ymatrix_RT_none_230617.txt'
+    plot_rmatrix(fname, Nterm=3, onoff='none')
+    fname = './data/ymatrix_50K_conducting_230617.txt'
+    plot_rmatrix(fname, Nterm=3, onoff='conducting')
+    # fname = './data/ymatrix_split_gnd_plane_one_small_gate_depleted_220527.txt'
+    # plot_rmatrix(fname, Nterm=3, onoff='off')
     # plot_rmatrix('', Nterm=3, C0=1, onoff='on')
