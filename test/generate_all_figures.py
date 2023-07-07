@@ -31,7 +31,7 @@ def test_plot_all_admittance_data():
     """
     # Instantiate the class and read the data from file
     myy = am.Admittance(symmetrize=False)
-    filename = './data/ymatrix_50K_freq_vgall_230618.txt'
+    filename = './data/ymatrix_50K_freq_vgall_230707.txt'
     myy.load_all_data_from_file(filename)
     myy.cscale = 1e-15
     myy.gscale = 1e-6
@@ -48,7 +48,7 @@ def test_plot_coupling_cmatrix():
     """
     # Instantiate the class and read the data from file
     myc = am.Admittance(symmetrize=False)
-    filename = './data/ymatrix_50K_freq_vgall_230618.txt'
+    filename = './data/ymatrix_50K_freq_vgall_230707.txt'
     myc.load_all_data_from_file(filename)
     ylim = (-5, 225)
     fname = './figs/simplified_coupling_cmatrix_from_y_vs_vg.pdf'
@@ -63,7 +63,7 @@ def test_plot_cij_parasitic_simplified_compare():
     """
     # Setup the class, read the data, plot the matrix elements
     myc = am.Admittance(symmetrize=False)
-    filename = './data/ymatrix_50K_freq_vgall_230618.txt'
+    filename = './data/ymatrix_50K_freq_vgall_230707.txt'
     myc.load_all_data_from_file(filename)
     fname = './figs/c12_coupling_cmatrix_comparison_from_y_vs_vg.pdf'
     ylim = (-1, 25)

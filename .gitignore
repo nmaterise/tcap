@@ -13,7 +13,7 @@ tags
 *.csv
 *.txt
 !requirements.txt
-!ymatrix_50K_vgall.txt
+!ymatrix_50K_freq_vgall_230707.txt
 !surface_density_50K_vgall_230618.txt
 
 
