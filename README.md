@@ -32,6 +32,8 @@ python test/generate_all_figures.py
       dc bias points
     - It takes about 7 minutes on my workstation to run this calculation, it may
       take more or less time to run on your system
+    - Run Evaluate on the Global Evaluation labeled Admittance Matrix to update
+      the data before exporting the Y matrix to file 
     - To export the Y matrix data and the charge concentrations, use the Export
       tab at the bottom of the left-hand-side column
     - After exporting the data, the `i` entries in the file
